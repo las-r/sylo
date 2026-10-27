@@ -4,6 +4,18 @@ from sylo.nodes import *
 # by las-r
 
 # precedences
+PRECEDENCES = {
+    "||": 1,
+    "&&": 2,
+    "==": 3, "!=": 3,
+    "<": 4, ">": 4, "<=": 4, ">=": 4,
+    "|": 5,
+    "^": 6,
+    "&": 7,
+    "<<": 8, ">>": 9,
+    "+": 9, "-": 9,
+    "*": 10, "/": 10, "%": 10
+}
 
 # parser class
 class Parser:
@@ -25,7 +37,9 @@ class Parser:
 
     # parsing functions
     def parseatom(self):
-        token = self.peek()
+        token = self.advance()
+        if token is None:
+            raise SyntaxError("Expected expression")
 
         # literals
         if token.kind == "STRING":
@@ -36,6 +50,8 @@ class Parser:
             return IntLit(int(token.value))
         if token.kind == "BOOL":
             return BoolLit(token.value == "true")
+
+        raise SyntaxError(f"Unexpected token: {token.value}")
 
     def parseexpr(self, minprec=0):
         pass
