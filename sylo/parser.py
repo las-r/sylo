@@ -1,4 +1,4 @@
-from defs.nodes import *
+from sylo.nodes import *
 
 # 2: sylo parser
 # by las-r
