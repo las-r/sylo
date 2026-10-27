@@ -9,7 +9,7 @@ class Node:
     line: int = 0
     col: int = 0
 
-# expressions
+# region expressions
 @dataclass 
 class Expr(Node): 
     type: Optional[object] = None
@@ -34,7 +34,9 @@ class BoolLit(Expr):
 class StringLit(Expr): 
     value: str
 
-# statements
+# endregion
+
+# region statements
 @dataclass
 class Stmt(Node): 
     pass
@@ -50,7 +52,9 @@ class VarAssign(Stmt):
     name: str
     value: str
 
-# top level
+# endregion
+
+# region top level
 @dataclass
 class Param(Node):
     name: str
@@ -66,3 +70,5 @@ class Func(Node):
 @dataclass
 class Program(Node):
     funcs: list[Func]
+
+# endregion
