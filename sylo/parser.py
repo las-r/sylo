@@ -30,10 +30,12 @@ class Parser:
         # literals
         if token.kind == "STRING":
             return StringLit(token.value[1:-1])
-        if token.kind == "INTEGER":
-            return IntLit(int(token.value))
         if token.kind == "FLOAT":
             return FloatLit(float(token.value))
+        if token.kind == "INTEGER":
+            return IntLit(int(token.value))
+        if token.kind == "BOOL":
+            return BoolLit(token.value == "true")
 
     def parseexpr(self, minprec=0):
         pass
