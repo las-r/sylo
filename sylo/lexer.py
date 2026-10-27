@@ -1,8 +1,15 @@
+from dataclasses import dataclass
 import re
 
 # 1: sylo lexer
 # by las-r
 
+@dataclass
+class Token:
+    kind: str
+    value: str
+
+# token pattern
 TOKEN_PATTERN = re.compile(
     r'(?P<COMMENT>//[^\n]*)'
     r'|(?P<STRING>"(?:\\.|[^"\\])*")'
@@ -22,5 +29,5 @@ def tokenize(source):
         value = match.group()
         if kind in ("COMMENT", "SPACE"):
             continue
-        tokens.append((kind, value))
+        tokens.append(Token(kind, value))
     return tokens
