@@ -1,6 +1,6 @@
 # Sylo
 Sylo is yet another minimal compiled programming language.\
-It is statically typed, garbage collected, has no pointers or manual memory control.
+It is statically typed, garbage collected, and has no pointers or manual memory control.
 
 ## Lexical
 - Comments: `// to end of line`.
@@ -44,7 +44,7 @@ def void greet(string name) { println("hi " + name); }
 - Return type is a type or `void`.
 - Parameters are passed by value (references share their object).
 - Falling off the end of a non-`void` function is a runtime error.
-- Every program has exactly one `def int main() { ... }`; its return value is the process exit code.
+- Every program has exactly one `def int main() { ... }`, its return value is the process exit code.
 
 ## Statements
 - `T V = X;` declares with an explicit type. `V := X;` declares with the type of `X`.
@@ -59,7 +59,7 @@ def void greet(string name) { println("hi " + name); }
 ## Expressions
 ### Literals and construction
 - Array: `int[]{1, 2, 3}`, empty `int[]{}`.
-- Map: `map[string]int{}` (always empty; fill with assignment).
+- Map: `map[string]int{}` (always empty, fill with assignment).
 - Struct: `Point{x: 1, y: 2}`. Every field is required, in any order.
 
 ### Access
@@ -78,9 +78,9 @@ Precedence, lowest to highest (all binary operators are left-associative):
 | 5 | `\|` | int, byte |
 | 6 | `^` | int, byte |
 | 7 | `&` | int, byte |
-| 8 | `<<` `>>` | int (shift count masked to 0..63; `>>` is arithmetic) |
-| 9 | `+` `-` | int, float, byte; `+` also string |
-| 10 | `*` `/` `%` | int, float, byte; `%` int/byte only |
+| 8 | `<<` `>>` | int (shift count masked to 0..63, `>>` is arithmetic) |
+| 9 | `+` `-` | int, float, byte, `+` also string |
+| 10 | `*` `/` `%` | int, float, byte, `%` int/byte only |
 | 11 (unary) | `-` `!` `~` | `-`: int/float, `!`: bool, `~`: int/byte |
 
 Rules:
