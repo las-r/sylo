@@ -15,6 +15,7 @@ TOKEN_PATTERN = re.compile(
     r'|(?P<STRING>"(?:\\.|[^"\\])*")'
     r'|(?P<FLOAT>\d+\.\d+)'
     r'|(?P<INTEGER>\d+)'
+    r'|(?P<BOOL>\b(?:true|false)\b)'
     r'|(?P<IDENTIFIER>[a-zA-Z_]\w*)'
     r'|(?P<OP>:=|==|!=|<=|>=|&&|\|\||<<|>>|[+\-*/%<>=!~|^&])'
     r'|(?P<PUNCT>[(){}\[\];,.:])'
