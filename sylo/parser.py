@@ -3,7 +3,7 @@ from sylo.nodes import *
 # 2: sylo parser
 # by las-r
 
-# precedences
+# constants
 PRECEDENCES = {
     "||": 1,
     "&&": 2,
@@ -16,6 +16,7 @@ PRECEDENCES = {
     "+": 9, "-": 9,
     "*": 10, "/": 10, "%": 10
 }
+UNARIES = ["-", "!", "~"]
 
 # parser class
 class Parser:
@@ -35,11 +36,26 @@ class Parser:
             self.pos += 1
         return token
 
+    def expect_type(self, kind):
+        token = self.peek()
+        if token is None or token.kind != kind:
+            raise SyntaxError(f"Expected token type {kind}, got {token}")
+        return self.advance()
+
+    def expect_value(self, value):
+        token = self.peek()
+        if token is None or token.value != value:
+            raise SyntaxError(f"Expected {value!r}, got {token}")
+        return self.advance()
+
     # parsing functions
     def parseatom(self):
         token = self.advance()
-        if token is None:
-            raise SyntaxError("Expected expression")
+
+        # unary operators
+        if token.value in UNARIES:
+            operand = self.parseatom()
+            return UnaryOp(token.value, operand)
 
         # literals
         if token.kind == "STRING":
@@ -51,10 +67,26 @@ class Parser:
         if token.kind == "BOOL":
             return BoolLit(token.value == "true")
 
+        # parentheses
+        if token.value == "(":
+            expr = self.parseexpr()
+            self.expect_value(")")
+            return expr
+
         raise SyntaxError(f"Unexpected token: {token.value}")
 
     def parseexpr(self, minprec=0):
-        pass
+        left = self.parseatom()
+        while True:
+            token = self.peek()
+            if token is None or token.value not in PRECEDENCES:
+                break
+            prec = PRECEDENCES[token.value]
+            if prec < minprec:
+                break
+            op = self.advance()
+            right = self.parseexpr(prec + 1)
+            left = BinaryOp(left, op.value, right)
 
     def parsestmt(self):
         pass

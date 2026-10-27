@@ -34,6 +34,17 @@ class BoolLit(Expr):
 class StringLit(Expr): 
     value: str
 
+@dataclass
+class UnaryOp(Expr):
+    op: str
+    value: object
+
+@dataclass
+class BinaryOp(Expr):
+    left: object
+    op: str
+    right: object
+
 # endregion
 
 # region statements
