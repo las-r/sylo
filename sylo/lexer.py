@@ -3,7 +3,6 @@ import re
 # 1: sylo lexer
 # by las-r
 
-# regex
 TOKEN_PATTERN = re.compile(
     r'(?P<COMMENT>//[^\n]*)'
     r'|(?P<STRING>"(?:\\.|[^"\\])*")'
