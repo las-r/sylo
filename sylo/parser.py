@@ -51,6 +51,8 @@ class Parser:
     # parsing functions
     def parseatom(self):
         token = self.advance()
+        if token is None:
+            raise SyntaxError("Expected expression")
 
         # unary operators
         if token.value in UNARIES:
