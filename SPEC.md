@@ -28,9 +28,9 @@ It is statically typed, garbage collected, and has no pointers or manual memory 
 
 ### Conversions
 No implicit conversions anywhere. Explicit conversions are `int(x)`, `float(x)`, `byte(x)` and `str(x)`.
-- `int(float)` truncates toward zero.
-- `int(byte)` and `byte(int)` (the latter keeps the low 8 bits) are allowed.
-- `str(x)` accepts `int`, `float`, `bool`, `byte`.
+- `int:float` truncates toward zero.
+- `int:byte` and `byte:int` (the latter keeps the low 8 bits) are allowed.
+- `str:x` accepts `int`, `float`, `bool`, `byte`.
 
 ## Declarations
 Top level contains only `struct` and `def` declarations, in any order. There are no global variables, nested functions, closures, overloading or imports.
