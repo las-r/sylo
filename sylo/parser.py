@@ -86,12 +86,42 @@ class Parser:
             prec = PRECEDENCES[token.value]
             if prec < minprec:
                 break
-            op = self.advance()
+            op = self.advance().value
             right = self.parseexpr(prec + 1)
-            left = BinaryOp(left, op.value, right)
+            left = BinaryOp(left, op, right)
 
     def parsestmt(self):
-        pass
+        token = self.advance()
+        if token is None:
+            raise SyntaxError("Expected statement")
+
+        # variables
+        if token.type == "IDENTIFIER":
+            name = self.advance().value
+
+            # inferred declaration
+            if self.peek() is not None and self.peek().value == ":=":
+                self.advance()
+                value = self.parseexpr()
+                return VarDeclare(None, name, value)
+
+            # assignment
+            if self.peek() is not None and self.peek().value == "=":
+                self.advance()
+                value = self.parseexpr()
+                return VarAssign(name, value)
+
+        # typed variable declaration
+        if token.type == "TYPE":
+            type_name = token.value
+            name = self.expect_type("IDENTIFIER").value
+            if self.peek() is not None and self.peek().value == "=":
+                self.advance()
+                value = self.parseexpr()
+                return VarDeclare(type_name, name, value)
+            return VarDeclare(type_name, name, None)
+
+        raise SyntaxError(f"Unexpected token: {token.value}")
 
     # main parse function
     def parse(self):

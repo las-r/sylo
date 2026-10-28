@@ -6,8 +6,7 @@ from typing import Optional
 
 @dataclass
 class Node:
-    line: int = 0
-    col: int = 0
+    pass
 
 # region expressions
 @dataclass 
@@ -37,13 +36,13 @@ class StringLit(Expr):
 @dataclass
 class UnaryOp(Expr):
     op: str
-    value: object
+    value: Expr
 
 @dataclass
 class BinaryOp(Expr):
-    left: object
+    left: Expr
     op: str
-    right: object
+    right: Expr
 
 # endregion
 
@@ -54,14 +53,14 @@ class Stmt(Node):
 
 @dataclass
 class VarDeclare(Stmt):
-    name: str
     type_name: Optional[str]
-    value: Expr
+    name: str
+    value: Optional[Expr]
 
 @dataclass
 class VarAssign(Stmt):
     name: str
-    value: str
+    value: Expr
 
 # endregion
 
