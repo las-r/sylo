@@ -36,7 +36,7 @@ class Parser:
             self.pos += 1
         return token
 
-    def expect_type(self, kind):
+    def expect_kind(self, kind):
         token = self.peek()
         if token is None or token.kind != kind:
             raise SyntaxError(f"Expected token type {kind}, got {token}")
@@ -54,6 +54,11 @@ class Parser:
         if token is None:
             raise SyntaxError("Expected expression")
 
+        # type casting
+        if token.kind == "TYPE":
+            self.expect_value(":")
+            return Cast(token.value, self.parseatom())
+
         # unary operators
         if token.value in UNARIES:
             operand = self.parseatom()
@@ -68,6 +73,10 @@ class Parser:
             return IntLit(int(token.value))
         if token.kind == "BOOL":
             return BoolLit(token.value == "true")
+
+        # variable
+        if token.kind == "IDENTIFIER":
+            return Var(token.value)
 
         # parentheses
         if token.value == "(":
@@ -89,39 +98,39 @@ class Parser:
             op = self.advance().value
             right = self.parseexpr(prec + 1)
             left = BinaryOp(left, op, right)
+        return left
 
     def parsestmt(self):
         token = self.advance()
         if token is None:
             raise SyntaxError("Expected statement")
 
-        # variables
-        if token.type == "IDENTIFIER":
-            name = self.advance().value
-
-            # inferred declaration
-            if self.peek() is not None and self.peek().value == ":=":
+        # inferred variables and assignment
+        if token.kind == "IDENTIFIER":
+            nxt = self.peek()
+            if nxt is not None and nxt.value == ":=":
                 self.advance()
-                value = self.parseexpr()
-                return VarDeclare(None, name, value)
+                stmt = VarDeclare(None, token.value, self.parseexpr())
+            elif nxt is not None and nxt.value == "=":
+                self.advance()
+                stmt = VarAssign(token.value, self.parseexpr())
+            else:
+                raise SyntaxError(f"Unexpected token after {token.value!r}: {nxt}")
 
-            # assignment
+        # typed variables
+        elif token.kind == "TYPE":
+            name = self.expect_kind("IDENTIFIER").value
+            value = None
             if self.peek() is not None and self.peek().value == "=":
                 self.advance()
                 value = self.parseexpr()
-                return VarAssign(name, value)
+            stmt = VarDeclare(token.value, name, value)
 
-        # typed variable declaration
-        if token.type == "TYPE":
-            type_name = token.value
-            name = self.expect_type("IDENTIFIER").value
-            if self.peek() is not None and self.peek().value == "=":
-                self.advance()
-                value = self.parseexpr()
-                return VarDeclare(type_name, name, value)
-            return VarDeclare(type_name, name, None)
+        else:
+            raise SyntaxError(f"Unexpected token: {token.value}")
 
-        raise SyntaxError(f"Unexpected token: {token.value}")
+        self.expect_value(";")
+        return stmt
 
     # main parse function
     def parse(self):

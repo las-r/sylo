@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional
 
 # def: sylo nodes
@@ -8,10 +8,10 @@ from typing import Optional
 class Node:
     pass
 
-# region expressions
+# expressions
 @dataclass 
 class Expr(Node): 
-    type: Optional[object] = None
+    type: Optional[object] = field(default=None, kw_only=True)
 
 @dataclass
 class IntLit(Expr): 
@@ -44,9 +44,16 @@ class BinaryOp(Expr):
     op: str
     right: Expr
 
-# endregion
+@dataclass
+class Var(Expr):
+    name: str
 
-# region statements
+@dataclass
+class Cast(Expr):
+    target: str
+    value: Expr
+
+# statements
 @dataclass
 class Stmt(Node): 
     pass
@@ -62,9 +69,7 @@ class VarAssign(Stmt):
     name: str
     value: Expr
 
-# endregion
-
-# region top level
+# top level
 @dataclass
 class Param(Node):
     name: str
@@ -80,5 +85,3 @@ class Func(Node):
 @dataclass
 class Program(Node):
     funcs: list[Func]
-
-# endregion
