@@ -18,7 +18,7 @@ It is statically typed, garbage collected, and has no pointers or manual memory 
 
 ### Composite types
 - Array `T[]`: growable, bounds-checked. `T` is any type, including other arrays.
-- Map `map[K]V`: `K` must be `int`, `string`, `bool` or `byte`. `V` is any type.
+- Map `[K]V`: `K` must be `int`, `string`, `bool` or `byte`. `V` is any type.
 - Struct: declared at top level as `struct Name { T a; T b; }`. Named fields, no methods.
 
 ### Reference semantics
